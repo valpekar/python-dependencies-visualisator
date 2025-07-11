@@ -1,0 +1,179 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 2400px;
+                 height: 1600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    
+<style>
+@page { size: 2400px 1600px; margin: 0; }
+html, body { width: 2400px; height: 1600px; margin: 0; padding: 0; overflow: hidden; display: block; }
+#loadingBar { display: none !important; }
+#mynetwork {
+  width: 2400px !important;
+  height: 1600px !important;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: visible !important;
+}
+#mynetwork > canvas {
+  width: 2400px !important;
+  height: 1600px !important;
+  object-fit: contain !important;
+}
+#minimalLoading {position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:22px;color:#000;z-index:1000;}
+</style>
+</head>
+
+
+    <body>
+<div id="minimalLoading">0%</div>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pillow", "label": "pillow", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pre-commit", "label": "pre-commit", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pytest", "label": "pytest", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "charset_normalizer", "label": "charset_normalizer", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "intersphinx-registry", "label": "intersphinx-registry", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "seaborn", "label": "seaborn", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "osmnx", "label": "osmnx", "shape": "dot", "size": 16}, {"color": "#1976d2", "fixed": true, "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "requests", "label": "requests", "shape": "dot", "size": 16, "x": 800.0, "y": 0.0}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "texext", "label": "texext", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "contextily", "label": "contextily", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pytest-mpl", "label": "pytest-mpl", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pytest-randomly", "label": "pytest-randomly", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "jinja2", "label": "jinja2", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "matplotlib", "label": "matplotlib", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "greenlet", "label": "greenlet", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "momepy", "label": "momepy", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "mypy", "label": "mypy", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "cairocffi", "label": "cairocffi", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "jsonpickle", "label": "jsonpickle", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "numpydoc", "label": "numpydoc", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "chardet", "label": "chardet", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pygraphviz", "label": "pygraphviz", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pytest-xdist", "label": "pytest-xdist", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "scipy", "label": "scipy", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "igraph", "label": "igraph", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "certifi", "label": "certifi", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "sympy", "label": "sympy", "shape": "dot", "size": 16}, {"color": "#1976d2", "fixed": true, "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pyvis", "label": "pyvis", "shape": "dot", "size": 16, "x": -647.2135954999578, "y": 470.2282018339786}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "idna", "label": "idna", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "urllib3", "label": "urllib3", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "numpy", "label": "numpy", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "sphinx-gallery", "label": "sphinx-gallery", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pydata-sphinx-theme", "label": "pydata-sphinx-theme", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pyee", "label": "pyee", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "ipython", "label": "ipython", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "PySocks", "label": "PySocks", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pandas", "label": "pandas", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pytest-cov", "label": "pytest-cov", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "myst-nb", "label": "myst-nb", "shape": "dot", "size": 16}, {"color": "#1976d2", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "networkx", "label": "networkx", "shape": "dot", "size": 19.2}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "pydot", "label": "pydot", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "lxml", "label": "lxml", "shape": "dot", "size": 16}, {"color": "#1976d2", "fixed": true, "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "playwright", "label": "playwright", "shape": "dot", "size": 16, "x": -647.2135954999579, "y": -470.2282018339784}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "scikit-learn", "label": "scikit-learn", "shape": "dot", "size": 16}, {"color": "#388e3c", "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "sphinx", "label": "sphinx", "shape": "dot", "size": 16}, {"color": "#1976d2", "fixed": true, "font": {"bold": true, "color": "#111", "face": "Arial", "size": 16}, "id": "packaging", "label": "packaging", "shape": "dot", "size": 16, "x": 247.2135954999578, "y": -760.8452130361229}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "requests", "to": "PySocks"}, {"arrows": "to", "from": "requests", "to": "certifi"}, {"arrows": "to", "from": "requests", "to": "urllib3"}, {"arrows": "to", "from": "requests", "to": "idna"}, {"arrows": "to", "from": "requests", "to": "chardet"}, {"arrows": "to", "from": "requests", "to": "charset_normalizer"}, {"arrows": "to", "from": "pyvis", "to": "jinja2"}, {"arrows": "to", "from": "pyvis", "to": "networkx"}, {"arrows": "to", "from": "pyvis", "to": "jsonpickle"}, {"arrows": "to", "from": "pyvis", "to": "ipython"}, {"arrows": "to", "from": "networkx", "to": "pytest-randomly"}, {"arrows": "to", "from": "networkx", "to": "igraph"}, {"arrows": "to", "from": "networkx", "to": "pytest-mpl"}, {"arrows": "to", "from": "networkx", "to": "matplotlib"}, {"arrows": "to", "from": "networkx", "to": "pydot"}, {"arrows": "to", "from": "networkx", "to": "pandas"}, {"arrows": "to", "from": "networkx", "to": "sympy"}, {"arrows": "to", "from": "networkx", "to": "pytest"}, {"arrows": "to", "from": "networkx", "to": "scikit-learn"}, {"arrows": "to", "from": "networkx", "to": "pre-commit"}, {"arrows": "to", "from": "networkx", "to": "sphinx"}, {"arrows": "to", "from": "networkx", "to": "numpydoc"}, {"arrows": "to", "from": "networkx", "to": "momepy"}, {"arrows": "to", "from": "networkx", "to": "cairocffi"}, {"arrows": "to", "from": "networkx", "to": "scipy"}, {"arrows": "to", "from": "networkx", "to": "pytest-xdist"}, {"arrows": "to", "from": "networkx", "to": "contextily"}, {"arrows": "to", "from": "networkx", "to": "pydata-sphinx-theme"}, {"arrows": "to", "from": "networkx", "to": "mypy"}, {"arrows": "to", "from": "networkx", "to": "pytest-cov"}, {"arrows": "to", "from": "networkx", "to": "numpy"}, {"arrows": "to", "from": "networkx", "to": "seaborn"}, {"arrows": "to", "from": "networkx", "to": "pillow"}, {"arrows": "to", "from": "networkx", "to": "texext"}, {"arrows": "to", "from": "networkx", "to": "osmnx"}, {"arrows": "to", "from": "networkx", "to": "myst-nb"}, {"arrows": "to", "from": "networkx", "to": "sphinx-gallery"}, {"arrows": "to", "from": "networkx", "to": "lxml"}, {"arrows": "to", "from": "networkx", "to": "pygraphviz"}, {"arrows": "to", "from": "networkx", "to": "intersphinx-registry"}, {"arrows": "to", "from": "playwright", "to": "greenlet"}, {"arrows": "to", "from": "playwright", "to": "pyee"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"stabilization": true, "barnesHut": {"gravitationalConstant": -8000, "centralGravity": 0.1, "springLength": 250, "springConstant": 0.02, "damping": 0.3}}, "interaction": {"zoomView": true, "zoomSpeed": 0.2, "hover": true}, "layout": {"improvedLayout": true}, "manipulation": true, "nodes": {"shape": "dot", "size": 16, "font": {"size": 16, "face": "Arial", "color": "#111", "bold": true}, "color": {"background": "#C8E6C9", "border": "#388E3C", "highlight": {"background": "#E8F5E9", "border": "#388E3C"}}}, "edges": {"arrows": {"to": {"enabled": true}}, "color": {"color": "#666666", "highlight": "#999999"}, "width": 2, "smooth": {"type": "continuous"}}, "configure": {"enabled": false}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    
+<script>
+var minimalLoading = document.getElementById('minimalLoading');
+if (minimalLoading) {
+  minimalLoading.innerText = '0%';
+  var interval = setInterval(function() {
+    if (window.network && window.network.body && window.network.body.nodeIndices && window.network.body.nodeIndices.length > 0) {
+      minimalLoading.innerText = '50%';
+      setTimeout(function() {
+        minimalLoading.innerText = '100%';
+        setTimeout(function() { 
+          if (minimalLoading && minimalLoading.parentNode) {
+            minimalLoading.parentNode.removeChild(minimalLoading);
+          }
+        }, 500);
+      }, 500);
+      clearInterval(interval);
+    }
+  }, 200);
+}
+</script>
+
+<script>
+  window.addEventListener("load", function() {
+    if (window.network) {
+      var pos = window.network.getViewPosition();
+      window.network.moveTo({scale: 4, position: pos});
+    }
+  });
+</script>
+</body>
+</html>
