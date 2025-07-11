@@ -2,7 +2,7 @@
 
 A robust, extensible tool to visualize Python project dependencies as interactive graphs and export them to high-quality PDF, using a clean, modular architecture.
 
-<img width="300" alt="Screenshot 2025-07-11 at 16 43 51" src="https://github.com/user-attachments/assets/3f942ff0-220c-4cb9-bef3-21d827a71ffc" />
+<img width="500" alt="Screenshot 2025-07-11 at 16 43 51" src="https://github.com/user-attachments/assets/3f942ff0-220c-4cb9-bef3-21d827a71ffc" />
 
 ## Features
 - Parses `requirements.txt` and fetches dependencies recursively from PyPI
