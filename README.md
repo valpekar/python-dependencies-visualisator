@@ -31,18 +31,19 @@ A robust, extensible tool to visualize Python project dependencies as interactiv
 ## Usage
 Generate an interactive HTML dependency graph:
 ```bash
-python main.py --file requirements.txt --output my_graph.html --depth 1
+python main.py --file requirements.txt --output my_graph.html --levels 1
 ```
 Export the graph to PDF:
 ```bash
-python main.py --file requirements.txt --output my_graph.html --pdf my_graph.pdf --depth 1
+python main.py --file requirements.txt --output my_graph.html --pdf my_graph.pdf --depth 1 --levels 2
 ```
 
 ### CLI Options
 - `--file`   : Path to requirements.txt (default: requirements.txt)
 - `--output` : Output HTML file (default: dependency_graph.html)
 - `--pdf`    : Output PDF file (optional)
-- `--depth`  : Max dependency depth (default: 1)
+- `--depth`  : Max dependency depth (default: 1). Controls how many levels deep the tool will fetch dependencies from PyPI for each package.
+- `--levels` : Controls how many levels of the already-built dependency graph are visualized in the output.
 
 ## Project Structure
 ```
