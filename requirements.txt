@@ -3,3 +3,4 @@ networkx
 pyvis
 playwright
 packaging
+numpy
